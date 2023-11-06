@@ -50,7 +50,7 @@ async function run() {
       res.send(result);
     });
 
-    // products routes
+    // update and delete routes
     app.put("/brands/:id", async (req, res) => {
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)};
@@ -70,10 +70,10 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/products/:id", async (req, res) => {
+    app.delete("/brands/:id", async (req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
-      const result = await productsCollection.deleteOne(query);
+      const result = await brandsCollection.deleteOne(query);
       res.send(result);
     });
 
