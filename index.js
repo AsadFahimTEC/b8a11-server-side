@@ -27,6 +27,9 @@ async function run() {
     const brandsCollection = client.db("productDB").collection("allbrands");
     const productsCollection = client.db("productDB").collection("allproducts");
     const serviceCollection = client.db("productDB").collection("myservices");
+    const bookingsCollection = client.db('carDoctor').collection('booking');
+
+    // auth related api
 
     // brandRoutes
     app.get("/brands/:brandId", async (req, res) => {
@@ -99,6 +102,56 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+      // bookings
+      app.get('/bookings', async(req, res) =>{
+        console.log(req.query.email);
+        // console.log('token owner info', req.user);
+        // if(req.user.email !==req.query.email){
+        //     return res.status(403).send({message: 'forbidden access'})  
+        // }
+        // // console.log('tok tok token', req.cookies.token);
+        // // console.log('user in the valid token', req.user);
+        // if(req.query.email !==req.user.email){
+        //     return res.status(403).send({message: 'forbidden access'})
+        // }
+        let query = {};
+        if(req.query?.email){
+            query = {
+                email: req.query.email
+            }
+        }
+        const result = await bookingsCollection.find(query).toArray();
+        res.send(result);
+    })
+
+    app.post('/bookings', async(req, res) =>{
+        const booking = req.body;
+        console.log(booking);
+        const result = await bookingsCollection.insertOne(booking);
+        res.send(result);
+    })
+
+    app.patch('/bookings/:id', async(req, res) =>{
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const updatedBooking = req.body;
+        console.log(updatedBooking);
+        const updatedDoc = {
+            $set: {
+                status: updatedBooking.status
+            },
+        };
+        const result = await bookingsCollection.updateOne(filter, updatedDoc);
+        res.send(result);
+    })
+
+    app.delete('/bookings/:id', async(req, res) =>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await bookingsCollection.deleteOne(query);
+        res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ping: 1});
