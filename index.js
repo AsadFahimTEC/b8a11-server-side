@@ -34,15 +34,10 @@ async function run() {
     // brandRoutes
     app.get("/brands/:brandId", async (req, res) => {
       const {brandId} = req.params;
-      const hex = /[0-9A-Fa-f]{6}/g;
-      let id = (hex.test(brandId))? ObjectId(brandId) : brandId;
-      const result = await brandsCollection.findOne({'_id':new ObjectID(id)}, function(error,doc) {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, doc);
-        }
+      const cursor = await brandsCollection.find({
+        _id: new ObjectId(brandId),
       });
+      const result = await cursor.toArray();
       res.send(result);
     });
 
