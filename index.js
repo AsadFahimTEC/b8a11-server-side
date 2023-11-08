@@ -9,9 +9,9 @@ const app = express();
 
 // middleware
 app.use(cors( {
-  origin:['http://localhost:5173'],
-  // origin: ['http://car-doctors-85298.web.app',
-  // 'http://car-doctors-85298.firebaseapp.com'],
+  // origin:['http://localhost:5173'],
+  origin: ['https://b8-a11-server-side.vercel.app',
+ 'https://career-course-9cae6.web.app'],
   credentials: true
 }));
 app.use(express.json());
